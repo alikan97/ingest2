@@ -12,7 +12,7 @@ class KinesisClient:
                             aws_access_key_id = os.environ.get('ACCESS'))
          self.data = []
 
-    def put(self, data, partition_key):
+    def put(self, data):
         self.data.append(data)
 
     @withLogging
