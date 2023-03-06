@@ -3,28 +3,38 @@ import csv as csv
 import asyncio
 from parse import parseAndValidate
 from kinesis import KinesisClient
+import schedule
 
-url = "wss://stream.binance.com:9443/ws/"
+streamUrl = "wss://stream.binance.com:9443/ws/"
+
 client = KinesisClient('Stream')
 
 subscribedSymbols = [
-    "ethbtc@miniTicker","bnbbtc@miniTicker","wavesbtc@miniTicker","bchabcbtc@miniTicker",
-    "bchsvbtc@miniTicker","xrpbtc@miniTicker","tusdbtc@miniTicker","eosbtc@miniTicker",
-    "trxbtc@miniTicker","ltcbtc@miniTicker","xlmbtc@miniTicker","bcptbtc@miniTicker",
-    "adabtc@miniTicker","zilbtc@miniTicker","xmrbtc@miniTicker","stratbtc@miniTicker",
-    "zecbtc@miniTicker","qkcbtc@miniTicker","neobtc@miniTicker","dashbtc@miniTicker","zrxbtc@miniTicker"
+    "ethbtc@miniTicker","bnbbtc@miniTicker","xrpbtc@miniTicker","eosbtc@miniTicker",
+    "trxbtc@miniTicker","ltcbtc@miniTicker","xlmbtc@miniTicker","adabtc@miniTicker",
+    "zecbtc@miniTicker","neobtc@miniTicker","maticbtc@miniTicker","algobtc@miniTicker"
 ]
 
 async def ingest(websocket):
+
+    if client is None:
+        # Log to splunk
+        print('Uh oh')
+        
+    schedule.every(30).seconds.do(client.send)
+
     while True:
+        schedule.run_pending()
         message = await websocket.recv()
         
         parsedData = parseAndValidate(message)
 
-        client.put(parsedData, 'KEY')
+        client.put(parsedData, parsedData['symbol'])
+        
+
 
 async def run():
-    listenerUrl = url + '/'.join(subscribedSymbols)
+    listenerUrl = streamUrl + '/'.join(subscribedSymbols)
 
     async with websockets.connect(listenerUrl) as ws:
         await ingest(ws)
