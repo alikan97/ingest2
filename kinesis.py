@@ -1,6 +1,8 @@
 import boto3
 import os
 import json
+from logger import withLogging
+
 class KinesisClient:
     def __init__(self, stream_name):
          self.streamName = stream_name
@@ -13,19 +15,12 @@ class KinesisClient:
     def put(self, data, partition_key):
         self.data.append(data)
 
+    @withLogging
     def send(self):
-
         response = self.client.put_record(
              StreamName = self.streamName,
              Data = json.dumps(self.data),
              PartitionKey = 'kinesis-stream-key1' # single shard
         )
 
-        if response.FailedRecordCount != 0:
-            print('Error occurred') # send to splunk
-        
-        withLogging(Type="Success", Message="Sent {0} records to kinesis") # Something like this
-
-def withLogging():
-    # Implement function decorator for splunk logging
-    return 0
+        return response

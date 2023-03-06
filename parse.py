@@ -15,5 +15,5 @@ def parseAndValidate(data:list) -> BinanceTickerStream:
                                      l = data['l'],
                                      tbv = data['v'],
                                      tqv = data['q'])
-    print("symbol is " + data['s'])
+
     return parsedData.__dict__

@@ -4,6 +4,7 @@ import asyncio
 from parse import parseAndValidate
 from kinesis import KinesisClient
 import schedule
+from logger import send_log, Log_Level
 
 streamUrl = "wss://stream.binance.com:9443/ws/"
 
@@ -16,10 +17,8 @@ subscribedSymbols = [
 ]
 
 async def ingest(websocket):
-
     if client is None:
-        # Log to splunk
-        print('Uh oh')
+        send_log(Log_Level.ERROR, "Error: Client Unavailable")
         
     schedule.every(30).seconds.do(client.send)
 
@@ -31,7 +30,6 @@ async def ingest(websocket):
 
         client.put(parsedData, parsedData['symbol'])
         
-
 
 async def run():
     listenerUrl = streamUrl + '/'.join(subscribedSymbols)
