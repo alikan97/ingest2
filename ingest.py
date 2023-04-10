@@ -7,8 +7,8 @@ import schedule
 from logger import send_log, Log_Level
 
 streamUrl = "wss://stream.binance.com:9443/ws/"
-
-client = KinesisClient('Stream')
+devMode = True
+client = KinesisClient('Stream', devMode)
 
 subscribedSymbols = [
     "ethbtc@miniTicker","bnbbtc@miniTicker","xrpbtc@miniTicker","eosbtc@miniTicker",
@@ -18,7 +18,7 @@ subscribedSymbols = [
 
 async def ingest(websocket):
     if client is None:
-        send_log(Log_Level.ERROR, "Error: Client Unavailable")
+        send_log(Log_Level.ERROR, "Error: Client Unavailable", devMode)
         
     schedule.every(30).seconds.do(client.send)
 
@@ -28,12 +28,12 @@ async def ingest(websocket):
         
         parsedData = parseAndValidate(message)
 
-        client.put(parsedData, parsedData['symbol'])
+        client.put(parsedData)
         
 
 async def run():
     listenerUrl = streamUrl + '/'.join(subscribedSymbols)
-
+    print(f"Listening to URL: {listenerUrl}")
     async with websockets.connect(listenerUrl) as ws:
         await ingest(ws)
         await asyncio.Future()
