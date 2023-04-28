@@ -1,2 +1,4 @@
-websockets==10.4
-boto3==1.26.79
+websockets
+boto3
+requests
+schedule
