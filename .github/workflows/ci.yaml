@@ -58,8 +58,8 @@ jobs:
       - name: Deploy to lambda
         env:
           FUNCTION_NAME: python-ingestor
-          IMAGE-NAME: ${{ needs.build.outputs.image-uri }}
+          IMAGE_NAME: ${{ needs.build.outputs.IMAGE_URI }}
         run: |
           pip3 install awscli
-          echo "IMAGE -- $IMAGE-NAME"
-          aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $IMAGE-NAME
+          echo "IMAGE -- $IMAGE_URI"
+          aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $IMAGE_URI
