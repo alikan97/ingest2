@@ -34,6 +34,8 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
           docker push $REGISTRY/$REPOSITORY:latest
+    outputs:
+      image-uri: $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
   deploy:
     name: deploy image to lambda
@@ -54,7 +56,8 @@ jobs:
       - name: Deploy to lambda
         env:
           FUNCTION_NAME: python-ingestor
+          IMAGE-NAME: ${{ needs.build.outputs.image-uri }}
         run: |
           pip3 install awscli
           echo "IMAGE -- $REGISTRY/$REPOSITORY:$IMAGE_TAG"
-          aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $IMAGE-NAME
