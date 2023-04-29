@@ -39,6 +39,17 @@ jobs:
     name: deploy image to lambda
     runs-on: ubuntu-latest
     steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{secrets.ACCESSKEYID}}
+          aws-secret-access-key: ${{secrets.SECRETACCESSKEY}}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
       - name: Deploy to lambda
         env:
           FUNCTION_NAME: python-ingestor
