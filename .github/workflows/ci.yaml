@@ -32,11 +32,10 @@ jobs:
           REPOSITORY: ingestion-repository
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          echo "IMAGE_URI=HELLOOOOO" >> $GITHUB_OUTPUT
-# docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-# docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-# docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
-# docker push $REGISTRY/$REPOSITORY:latest
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
+          docker push $REGISTRY/$REPOSITORY:latest
 
   deploy:
     name: deploy image to lambda
@@ -57,8 +56,9 @@ jobs:
       - name: Deploy to lambda
         env:
           FUNCTION_NAME: python-ingestor
-          IMAGE_NAME: ${{ needs.build.outputs.IMAGE_URI }}
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ingestion-repository
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           pip3 install awscli
-          echo "IMAGE -- $IMAGE_URI"
-          aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $IMAGE_URI
+          aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $REGISTRY/$REPOSITORY:$IMAGE_TAG
