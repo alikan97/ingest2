@@ -56,4 +56,5 @@ jobs:
           FUNCTION_NAME: python-ingestor
         run: |
           pip3 install awscli
+          echo "IMAGE -- $REGISTRY/$REPOSITORY:$IMAGE_TAG"
           aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $REGISTRY/$REPOSITORY:$IMAGE_TAG
