@@ -8,6 +8,7 @@ jobs:
   build:
     name: build-image
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -30,13 +31,13 @@ jobs:
           REPOSITORY: ingestion-repository
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-          docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
-          docker push $REGISTRY/$REPOSITORY:latest
-          export IMAGE_URI="$REGISTRY/$REPOSITORY:$IMAGE_TAG"
+          echo "IMAGE_URI=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+# docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+# docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+# docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
+# docker push $REGISTRY/$REPOSITORY:latest
     outputs:
-      image-uri: ${{ steps.push.outputs.IMAGE_URI }}
+      IMAGE_URI: ${{ steps.push.outputs.IMAGE_URI }}
 
   deploy:
     name: deploy image to lambda
@@ -57,8 +58,8 @@ jobs:
       - name: Deploy to lambda
         env:
           FUNCTION_NAME: python-ingestor
-          IMAGE_NAME: ${{ needs.build.outputs.image-uri }}
+          IMAGE-NAME: ${{ needs.build.outputs.image-uri }}
         run: |
           pip3 install awscli
-          echo "IMAGE -- $IMAGE_NAME -- $FUNCTION_NAME"
-          aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $IMAGE_NAME
+          echo "IMAGE -- $IMAGE-NAME"
+          aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $IMAGE-NAME
