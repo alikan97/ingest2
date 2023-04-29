@@ -8,7 +8,8 @@ jobs:
   build:
     name: build-image
     runs-on: ubuntu-latest
-
+    outputs:
+      image-uri: ${{ steps.push.outputs.IMAGE_URI }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -35,8 +36,7 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
           docker push $REGISTRY/$REPOSITORY:latest
-    outputs:
-      image-uri: ${{ steps.login-ecr.outputs.registry }}/ingestion-repository:${{steps.push.IMAGE_TAG}}
+          echo "IMAGE_URI=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> "$GITHUB_OUTPUT"
 
   deploy:
     name: deploy image to lambda
