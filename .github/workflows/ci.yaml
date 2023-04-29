@@ -25,6 +25,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, tag and push image to ECR
+        id: push
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ingestion-repository
@@ -35,7 +36,7 @@ jobs:
           docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
           docker push $REGISTRY/$REPOSITORY:latest
     outputs:
-      image-uri: $REGISTRY/$REPOSITORY:$IMAGE_TAG
+      image-uri: ${{ steps.login-ecr.outputs.registry }}/ingestion-repository:${{steps.push.IMAGE_TAG}}
 
   deploy:
     name: deploy image to lambda
