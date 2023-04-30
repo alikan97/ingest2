@@ -27,7 +27,6 @@ async def ingest(websocket):
         message = await websocket.recv()
         
         parsedData = parseAndValidate(message)
-
         client.put(parsedData)
         
 

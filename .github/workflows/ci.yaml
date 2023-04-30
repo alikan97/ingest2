@@ -36,29 +36,3 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
           docker push $REGISTRY/$REPOSITORY:latest
-
-  deploy:
-    name: deploy image to lambda
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{secrets.ACCESSKEYID}}
-          aws-secret-access-key: ${{secrets.SECRETACCESSKEY}}
-          aws-region: us-east-1
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Deploy to lambda
-        env:
-          FUNCTION_NAME: python-ingestor
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: ingestion-repository
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          pip3 install awscli
-          aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $REGISTRY/$REPOSITORY:$IMAGE_TAG

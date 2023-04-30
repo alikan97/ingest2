@@ -16,6 +16,7 @@ kind: Deployment
 metadata:
   name: crypto-ingestor
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: crypto-ingestor
@@ -26,7 +27,7 @@ spec:
     spec:
       containers:
       - name: crypto-ingestor
-        image: crypto-ingestor:latest
+        image: testimage:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
