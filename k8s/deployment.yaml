@@ -5,11 +5,9 @@ metadata:
 spec:
   selector:
     app: crypto-ingestor
-    type: ClusterIp
+    type: ClusterIP
   ports:
     - port: 80
-      targetPort: 5000
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -27,7 +25,9 @@ spec:
     spec:
       containers:
       - name: crypto-ingestor
-        image: testimage:latest
+        image: 074047115132.dkr.ecr.ap-southeast-2.amazonaws.com/processor-repository:latest
         imagePullPolicy: Always
-        ports:
-        - containerPort: 5000
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "250m"
