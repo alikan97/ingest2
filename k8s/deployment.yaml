@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: crypto-ingestor
-        image: 074047115132.dkr.ecr.ap-southeast-2.amazonaws.com/processor-repository:latest
+        image: 074047115132.dkr.ecr.ap-southeast-2.amazonaws.com/ingestion-repository:latest
         imagePullPolicy: Always
         resources:
           limits:

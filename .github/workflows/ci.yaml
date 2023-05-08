@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: build-image
+    name: build & deploy image
     runs-on: ubuntu-latest
     outputs:
       IMAGE_URI: ${{ steps.push.outputs.IMAGE_URI }}
@@ -36,3 +36,8 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
           docker push $REGISTRY/$REPOSITORY:latest
+
+      - name: Deploy to EKS
+        if: steps.push.outcome == 'success'
+        run: |
+          kubectl apply -f k8s/deployment.yaml
