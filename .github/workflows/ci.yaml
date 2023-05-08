@@ -44,4 +44,5 @@ jobs:
       - name: Deploy to EKS
         if: steps.push.outcome == 'success'
         run: |
+          kubectl apply -f k8s/eks-auth.yaml
           kubectl apply -f k8s/deployment.yaml
