@@ -47,6 +47,10 @@ jobs:
         run: |
           aws eks update-kubeconfig --name ingestion_cluster-cluster --region ap-southeast-2
 
+      - name: test
+        run: |
+          echo("${aws sts get-caller-identity}")
+
       - name: Deploy to EKS
         if: steps.push.outcome == 'success'
         run: |
