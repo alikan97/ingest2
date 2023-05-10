@@ -43,16 +43,16 @@ jobs:
           docker tag $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:latest
           docker push $REGISTRY/$REPOSITORY:latest
 
-      - name: Update kubeconfig
-        run: |
-          aws eks update-kubeconfig --name ingestion_cluster-cluster --region ap-southeast-2
+      # - name: Update kubeconfig
+      #   run: |
+      #     aws eks update-kubeconfig --name ingestion_cluster-cluster --region ap-southeast-2
       
-      - name: testss
-        run: |
-          echo "$(aws sts get-caller-identity)"
+      # - name: testss
+      #   run: |
+      #     echo "$(aws sts get-caller-identity)"
         
-      - name: Deploy to EKS
-        if: steps.push.outcome == 'success'
-        run: |
-          kubectl apply -f k8s/eks-auth.yaml
-          kubectl apply -f k8s/deployment.yaml
+      # - name: Deploy to EKS
+      #   if: steps.push.outcome == 'success'
+      #   run: |
+      #     kubectl apply -f k8s/eks-auth.yaml
+      #     kubectl apply -f k8s/deployment.yaml
