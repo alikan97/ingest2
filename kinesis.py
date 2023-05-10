@@ -7,7 +7,7 @@ class KinesisClient:
     def __init__(self, stream_name):
          self.streamName = stream_name
          self.data = []                 # Keep a buffer to hold data over time
-         self.client = boto3.client('kinesis')      # Use IAM role attached to EKS worker nodes
+         self.client = boto3.client('kinesis', region_name='ap-southeast-2')      # Use IAM role attached to EKS worker nodes
 
     def put(self, data):
         self.data.append(data)
