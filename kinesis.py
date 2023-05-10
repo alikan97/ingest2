@@ -12,11 +12,12 @@ class KinesisClient:
     def put(self, data):
         self.data.append(data)
 
-    @withLogging
+    # @withLogging
     def send(self):
         response = self.client.put_record(
             StreamName = self.streamName,
             Data = json.dumps(self.data),
             PartitionKey = 'kinesis-stream-key1' # single shard
         )
+        print("DATA SENT")
         return response

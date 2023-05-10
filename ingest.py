@@ -18,7 +18,8 @@ subscribedSymbols = [
 
 async def ingest(websocket):
     if client is None:
-        send_log(Log_Level.ERROR, "Error: Client Unavailable")
+        # send_log(Log_Level.ERROR, "Error: Client Unavailable")
+        print("Client null")
         
     schedule.every(30).seconds.do(client.send)
 
@@ -28,7 +29,6 @@ async def ingest(websocket):
         
         parsedData = parseAndValidate(message)
         client.put(parsedData)
-        
 
 async def run():
     listenerUrl = streamUrl + '/'.join(subscribedSymbols)
