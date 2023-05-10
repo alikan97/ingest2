@@ -30,18 +30,15 @@ def withLogging(func):
     return wrapper
 
 
-def send_log(level: Log_Level, message, devMode: bool):
-    if devMode == False:
-        event = {
-            'timestamp': datetime.datetime.now(),
-            'level': level,
-            'message': message
-        }
+def send_log(level: Log_Level, message):
+    event = {
+        'timestamp': datetime.datetime.now(),
+        'level': level,
+        'message': message
+    }
 
-        response = requests.post(HOST+LOG_URI,
-                                headers={"Authorization": f'Splunk {API_KEY}'},
-                                data=json.dumps(event, ensure_ascii=False).encode('utf-8'))
-        
-        return response
-    else:
-        return None
+    response = requests.post(HOST+LOG_URI,
+                            headers={"Authorization": f'Splunk {API_KEY}'},
+                            data=json.dumps(event, ensure_ascii=False).encode('utf-8'))
+    
+    return response

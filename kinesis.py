@@ -4,30 +4,19 @@ import json
 from logger import withLogging
 
 class KinesisClient:
-    def __init__(self, stream_name, devMode: bool):
+    def __init__(self, stream_name):
          self.streamName = stream_name
-        #  self.client = boto3.client('kinesis',
-        #                     region_name = os.environ.get('REGION'),
-        #                     aws_secret_access_key = os.environ.get('SECRET'),
-        #                     aws_access_key_id = os.environ.get('ACCESS'))
-         self.data = []
-         self.devMode = devMode
+         self.data = []                 # Keep a buffer to hold data over time
+         self.client = boto3.client('kinesis')      # Use IAM role attached to EKS worker nodes
 
     def put(self, data):
-        if self.devMode == False:
-            self.data.append(data)
-        else:
-            print(data)
+        self.data.append(data)
 
     @withLogging
     def send(self):
-        if self.devMode == False:
-            response = self.client.put_record(
-                StreamName = self.streamName,
-                Data = json.dumps(self.data),
-                PartitionKey = 'kinesis-stream-key1' # single shard
-            )
-
-            return response
-        else:
-            return None
+        response = self.client.put_record(
+            StreamName = self.streamName,
+            Data = json.dumps(self.data),
+            PartitionKey = 'kinesis-stream-key1' # single shard
+        )
+        return response
