@@ -49,7 +49,7 @@ jobs:
       
       - name: testss
         run: |
-          echo("${aws sts get-caller-identity}")
+          echo "$(aws sts get-caller-identity)"
         
       - name: Deploy to EKS
         if: steps.push.outcome == 'success'
