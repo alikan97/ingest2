@@ -31,7 +31,6 @@ def withLogging(func):
             
     return wrapper
 
-
 def send_log(level: Log_Level, message):
     event = {
         'timestamp': datetime.datetime.now(),

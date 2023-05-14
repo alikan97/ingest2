@@ -2,3 +2,4 @@ websockets
 boto3
 requests
 schedule
+aws_secretsmanager_caching
