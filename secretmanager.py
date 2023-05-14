@@ -14,7 +14,7 @@ class CachedSecretsManager():
         if CachedSecretsManager.__instance != None:
             raise Exception("Singleton class")
         else:
-            client = botocore.session.get_session().create_client('secretsmanager')
+            client = botocore.session.get_session().create_client('secretsmanager', region_name='ap-southeast-2')
             cache_config = SecretCacheConfig()
             cache = SecretCache( config = cache_config, client = client)
             CachedSecretsManager.__instance = cache
