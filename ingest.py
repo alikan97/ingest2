@@ -8,7 +8,7 @@ from logger import send_log, Log_Level
 
 streamUrl = "wss://stream.binance.com:9443/ws/"
 
-client = KinesisClient('Stream')
+client = KinesisClient('crypto_streams')
 
 subscribedSymbols = [
     "ethbtc@miniTicker","bnbbtc@miniTicker","xrpbtc@miniTicker","eosbtc@miniTicker",

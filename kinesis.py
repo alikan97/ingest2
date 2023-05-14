@@ -12,7 +12,7 @@ class KinesisClient:
     def put(self, data):
         self.data.append(data)
 
-    # @withLogging
+    @withLogging
     def send(self):
         response = self.client.put_record(
             StreamName = self.streamName,
