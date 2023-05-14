@@ -5,7 +5,7 @@ from aws_secretsmanager_caching import SecretCache, SecretCacheConfig
 class CachedSecretsManager():
     __instance = None
 
-    def getInstance():
+    def getInstance(self):
         if CachedSecretsManager.__instance == None:
             CachedSecretsManager()
         return CachedSecretsManager.__instance

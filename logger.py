@@ -4,10 +4,11 @@ import datetime
 from secretmanager import CachedSecretsManager
 
 cachedSecretsClient = CachedSecretsManager()
+Splunk_credentials = cachedSecretsClient.getInstance().get_secret_string('dev/splunk')
 
-HOST = cachedSecretsClient.getInstance().get_secret_string('SPLUNK_HOST')
-API_KEY = cachedSecretsClient.getInstance().get_secret_string('SPLUNK_API_KEY')
-PORT = cachedSecretsClient.getInstance().get_secret_string('SPLUNK_PORT')
+HOST = Splunk_credentials['SPLUNK_HOST']
+API_KEY = Splunk_credentials['SPLUNK_API_KEY']
+PORT = Splunk_credentials['SPLUNK_PORT']
 LOG_URI = "/services/collector/event"
 
 class Log_Level():
