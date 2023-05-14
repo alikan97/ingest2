@@ -19,5 +19,4 @@ class KinesisClient:
             Data = json.dumps(self.data),
             PartitionKey = 'kinesis-stream-key1' # single shard
         )
-        print("DATA SENT")
         return response

@@ -6,7 +6,7 @@ from secretmanager import CachedSecretsManager
 cachedSecretsClient = CachedSecretsManager()
 Splunk_credentials = json.loads(cachedSecretsClient.getInstance().get_secret_string('dev/splunk'))
 
-HOST = Splunk_credentials['SPLUNK_HOST']
+HOST = "https://" + Splunk_credentials['SPLUNK_HOST']
 API_KEY = Splunk_credentials['SPLUNK_API_KEY']
 PORT = Splunk_credentials['SPLUNK_PORT']
 LOG_URI = "/services/collector/event"
