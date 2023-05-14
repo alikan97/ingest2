@@ -21,20 +21,20 @@ def withLogging(func):
     def wrapper(*args, **kwargs):
         try:
             result = func(*args, **kwargs)
-            send_log(Log_Level.SUCCESS, f'{func.__name__} sent following records to Kinesis: {result}', True)
+            send_log(Log_Level.SUCCESS, f'{func.__name__} sent following records to Kinesis: {result}')
 
             if result.FailedRecordCount != 0:
-                send_log(Log_Level.WARN, f'{func.__name__} Missed {result.FailedRecordCount} records when sending to kinesis', True)
+                send_log(Log_Level.WARN, f'{func.__name__} Missed {result.FailedRecordCount} records when sending to kinesis')
 
             return result
         except Exception as e:
-            send_log(Log_Level.ERROR, f'Error occurred: {e}', True)
+            send_log(Log_Level.ERROR, f'Error occurred: {e}')
             
     return wrapper
 
 def send_log(level: Log_Level, message):
     event = {
-        'timestamp': datetime.datetime.now(),
+        'timestamp': str(datetime.datetime.now()),
         'level': level,
         'message': message
     }

@@ -52,3 +52,7 @@ jobs:
         run: |
           kubectl apply -f k8s/eks-auth.yaml
           kubectl apply -f k8s/deployment.yaml
+      
+      - name: Rollout deployment
+        run: |
+          kubectl rollout restart deployment crypto-ingestor
