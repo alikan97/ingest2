@@ -18,8 +18,7 @@ subscribedSymbols = [
 
 async def ingest(websocket):
     if client is None:
-        # send_log(Log_Level.ERROR, "Error: Client Unavailable")
-        print("Client null")
+        send_log(Log_Level.ERROR, "Error: Client Unavailable")
         
     schedule.every(30).seconds.do(client.send)
 
@@ -32,7 +31,6 @@ async def ingest(websocket):
 
 async def run():
     listenerUrl = streamUrl + '/'.join(subscribedSymbols)
-    print(f"Listening to URL: {listenerUrl}")
     async with websockets.connect(listenerUrl) as ws:
         await ingest(ws)
         await asyncio.Future()
